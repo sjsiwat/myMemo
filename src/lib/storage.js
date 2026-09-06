@@ -1,10 +1,10 @@
 import { db } from "@/lib/supabaseClient";
 
-const LOCAL_KEY = "johny-os-lite-state";
+const LOCAL_KEY = "memo-plus-lite-state";
 // Set the moment a real sign-in succeeds, cleared on sign-out. Lets the auth
 // bootstrap decide — synchronously, before the async Supabase session check
 // resolves — whether LOCAL_KEY is trustworthy cached account data.
-const AUTH_HINT_KEY = "johny-os-auth-hint";
+const AUTH_HINT_KEY = "memo-plus-auth-hint";
 
 let syncTimer = null;
 let syncChangeListener = null;

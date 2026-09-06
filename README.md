@@ -64,7 +64,7 @@ Little Johny started as a local-only productivity PWA and has grown into a **LIN
 1. User clicks "Login with LINE" → redirected to LINE OAuth
 2. LINE redirects back to /api/auth/line-callback (Cloudflare Worker)
 3. Worker exchanges code → LINE profile → finds/creates Supabase user
-   (deterministic email: line_<userId>@johny.internal)
+   (deterministic email: line_<userId>@memo.internal)
 4. Worker generates a Supabase magic link → browser lands back signed in
 ```
 

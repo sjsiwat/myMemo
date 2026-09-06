@@ -72,7 +72,7 @@ async function handleLineCallback(request, env) {
     const lineUsers = await lookupRes.json();
 
     // Email is always deterministic — no need to fetch it later
-    const lineEmail = `line_${lineUserId}@johny.internal`;
+    const lineEmail = `line_${lineUserId}@memo.internal`;
     let userId;
     let userEmail;
 
