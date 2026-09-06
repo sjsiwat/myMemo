@@ -1,5 +1,5 @@
 /**
- * Cloudflare Worker entry point for johnyos
+ * Cloudflare Worker entry point for mymemo
  * Handles /api/auth/line-callback and serves static assets.
  */
 
