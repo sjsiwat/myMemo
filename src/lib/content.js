@@ -79,7 +79,7 @@ export const capabilities = [
     number: "B",
     title: "LINE-native input",
     description:
-      "Message Johny Memo directly — \"เพิ่มงาน ส่งรายงาน #urgent\" — and it lands in the right place without opening the app.",
+      "Message Memo+ directly — \"เพิ่มงาน ส่งรายงาน #urgent\" — and it lands in the right place without opening the app.",
   },
   {
     number: "C",
@@ -114,7 +114,7 @@ export const processSteps = [
     number: "03",
     title: "Meet the user where they already are",
     description:
-      "Instead of asking for another app to be opened, Johny Memo listens inside LINE — where the day is already happening — and turns a message into structured data.",
+      "Instead of asking for another app to be opened, Memo+ listens inside LINE — where the day is already happening — and turns a message into structured data.",
   },
   {
     number: "04",
@@ -129,9 +129,9 @@ export const pointOfView =
 
 export const testimonial = {
   quote:
-    "I built Johny Memo because nothing else fit the way I actually work. It captures a task, a note, or an expense in a single line — from LINE, or from the app — and it keeps everything on my device until I decide to sync. It removes the friction between having a thought and saving it, so my head stays clear for the work that matters.",
+    "I built Memo+ because nothing else fit the way I actually work. It captures a task, a note, or an expense in a single line — from LINE, or from the app — and it keeps everything on my device until I decide to sync. It removes the friction between having a thought and saving it, so my head stays clear for the work that matters.",
   name: "Siwat J.",
-  role: "Developer, Johny Memo",
+  role: "Developer, Memo+",
 };
 
 export const finalCta = {
@@ -142,12 +142,12 @@ export const finalCta = {
 
 export const signup = {
   heading: "Create your workspace",
-  body: "Sign up once, and Johny Memo syncs your tasks, notes, and expenses across every device you use — LINE included.",
+  body: "Sign up once, and Memo+ syncs your tasks, notes, and expenses across every device you use — LINE included.",
   action: "Continue to Sign Up",
 };
 
 export const footer = {
-  company: "Johny Memo",
+  company: "Memo+",
   email: "sj.siwat@gmail.com",
   linkedin: "https://www.linkedin.com/in/siwat-sujjawanich",
   github: "https://github.com/sjsiwat",

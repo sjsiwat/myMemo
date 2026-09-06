@@ -12,7 +12,7 @@ preview_urls = true
 # nothing in the repo recorded it — declared here it survives a worker rebuild.
 # Custom domain (not a route): the pattern is the bare hostname, no path.
 [[routes]]
-pattern = "johny.siwat.me"
+pattern = "memo.siwat.me"
 custom_domain = true
 
 # Workers Builds ships with no build command configured, so the deploy step used

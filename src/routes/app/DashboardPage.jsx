@@ -10,7 +10,7 @@ import {
 } from "@/components/dashboard/DashboardPanels";
 
 export default function DashboardPage() {
-  useDocumentTitle("Johny Memo — Dashboard");
+  useDocumentTitle("Memo+ — Dashboard");
   return (
     <div className="flex flex-col gap-6">
       <QuickTiles />

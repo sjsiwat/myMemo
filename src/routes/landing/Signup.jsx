@@ -6,7 +6,7 @@ import { Footer } from "@/components/landing/footer";
 import { signup, signupAppUrl, appUrl } from "@/lib/content";
 
 export default function Signup() {
-  useDocumentTitle("Johny Memo — Sign up");
+  useDocumentTitle("Memo+ — Sign up");
 
   return (
     <main>

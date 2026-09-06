@@ -4,7 +4,7 @@ import { KanbanBoard } from "@/components/tasks/KanbanBoard";
 import { TaskModal } from "@/components/tasks/TaskModal";
 
 export default function TasksPage() {
-  useDocumentTitle("Johny Memo — งาน");
+  useDocumentTitle("Memo+ — งาน");
   const [addOpen, setAddOpen] = useState(false);
 
   return (

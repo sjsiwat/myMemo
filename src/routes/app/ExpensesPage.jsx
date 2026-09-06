@@ -5,7 +5,7 @@ import { ExpenseStats } from "@/components/expenses/ExpenseStats";
 import { ExpenseList } from "@/components/expenses/ExpenseList";
 
 export default function ExpensesPage() {
-  useDocumentTitle("Johny Memo — รายจ่าย");
+  useDocumentTitle("Memo+ — รายจ่าย");
   const [period, setPeriod] = useState("month");
 
   return (

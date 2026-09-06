@@ -55,7 +55,7 @@ export function Sidebar() {
     >
       <div className="flex items-center justify-between gap-2">
         {!collapsed && (
-          <span className="hidden font-grotesk text-sm font-semibold text-ink lg:inline">Johny Memo</span>
+          <span className="hidden font-grotesk text-sm font-semibold text-ink lg:inline">Memo+</span>
         )}
         <button
           type="button"

@@ -127,7 +127,7 @@ export function RecentNotesPanel() {
       <h3 className="font-grotesk text-sm font-semibold uppercase tracking-[0.08em] text-ink-faint">โน้ตล่าสุด</h3>
       <div className="mt-3 flex flex-col gap-2">
         {recent.length === 0 ? (
-          <EmptyState message="ยังไม่มีโน้ต ลองบันทึกไอเดียหรือความคิดแรกของ Johny OS" href="/notes" action="เขียนโน้ต" />
+          <EmptyState message="ยังไม่มีโน้ต ลองบันทึกไอเดียหรือความคิดแรกของ Memo+" href="/notes" action="เขียนโน้ต" />
         ) : (
           recent.map((note) => {
             const tags = parseTags(note.tags);

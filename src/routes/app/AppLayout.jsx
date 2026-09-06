@@ -13,7 +13,7 @@ export function AppLayout() {
   const theme = useStore((s) => s.theme);
 
   // Signed out, no page renders under the Outlet, so name the gate itself.
-  useDocumentTitle(auth.authed ? null : "Johny Memo — เข้าสู่ระบบ");
+  useDocumentTitle(auth.authed ? null : "Memo+ — เข้าสู่ระบบ");
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;

@@ -1,8 +1,8 @@
-# Little Johny (JohnyMemo)
+# Little Johny (Memo+)
 
 > A personal digital workspace — tasks, notes, expenses, calendar, and daily review in one place, with a LINE secretary in your pocket.
 
-**Live:** [johny.siwat.me](https://johny.siwat.me) &nbsp;|&nbsp; **Stack:** React · Vite · Tailwind · Supabase · LINE Login · Cloudflare Workers
+**Live:** [memo.siwat.me](https://memo.siwat.me) &nbsp;|&nbsp; **Stack:** React · Vite · Tailwind · Supabase · LINE Login · Cloudflare Workers
 
 ---
 
@@ -36,7 +36,7 @@ Little Johny started as a local-only productivity PWA and has grown into a **LIN
 
 ```
                     ┌─────────────────────────────┐
-                    │   johny.siwat.me            │
+                    │   memo.siwat.me             │
                     │   Cloudflare Worker         │
                     │  (server/worker.js + assets)│
                     └──────┬──────────────┬───────┘

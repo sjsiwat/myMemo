@@ -48,9 +48,9 @@ export function Hero() {
             variants={reveal}
             className="max-w-xl font-grotesk text-[13vw] font-semibold leading-[0.95] tracking-tight text-ink sm:text-6xl md:text-7xl"
           >
-            Johny
-            <br />
             Memo
+            <br />
+            +
           </motion.h1>
 
           <motion.p
@@ -90,7 +90,7 @@ export function Hero() {
         >
           <img
             src="/johny-cat.svg"
-            alt="Johny, the Johny Memo mascot cat"
+            alt="Johny, the Memo+ mascot cat"
             width={132}
             height={132}
             fetchPriority="high"
@@ -103,7 +103,7 @@ export function Hero() {
             </p>
             <img
               src="https://qr-official.line.me/gs/M_324ywxny_GW.png?oat_content=qr"
-              alt="QR code to add Johny Memo as a LINE friend"
+              alt="QR code to add Memo+ as a LINE friend"
               width={220}
               height={220}
               loading="lazy"

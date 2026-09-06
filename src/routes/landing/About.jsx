@@ -9,7 +9,7 @@ import { Footer } from "@/components/landing/footer";
 import { useDocumentTitle } from "@/lib/useDocumentTitle";
 
 export default function About() {
-  useDocumentTitle("Johny Memo — About");
+  useDocumentTitle("Memo+ — About");
 
   return (
     <main>

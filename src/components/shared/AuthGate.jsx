@@ -51,7 +51,7 @@ export function AuthGate({ auth }) {
       <div className="w-full max-w-sm border border-hairline px-6 py-8">
         <img src="/johny-cat.svg" alt="" width={64} height={64} aria-hidden className="mx-auto opacity-90" />
         <h1 className="mt-4 text-center font-grotesk text-2xl font-semibold tracking-tight text-ink">
-          Johny Memo
+          Memo+
         </h1>
         <p className="mt-2 text-center text-sm leading-relaxed text-ink-muted">
           พื้นที่ทำงานส่วนตัว ต้องเข้าสู่ระบบก่อนใช้งาน Dashboard

@@ -6,7 +6,7 @@
      - /assets + images/icons: cache-first (immutable, hashed)
      - everything else (incl. Supabase/API calls): network passthrough
    ============================================================ */
-const CACHE_NAME = "johny-dashboard-v2";
+const CACHE_NAME = "memo-plus-v1";
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();

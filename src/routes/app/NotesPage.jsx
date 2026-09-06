@@ -8,7 +8,7 @@ import { useStore } from "@/lib/store";
 import { isRichNote } from "@/lib/format";
 
 export default function NotesPage() {
-  useDocumentTitle("Johny Memo — โน้ต");
+  useDocumentTitle("Memo+ — โน้ต");
   const addNoteToStore = useStore((s) => s.addNote);
   const [openNoteId, setOpenNoteId] = useState(null);
   const [docEditId, setDocEditId] = useState(null);

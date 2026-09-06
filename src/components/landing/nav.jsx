@@ -13,7 +13,7 @@ export function Nav() {
           to="/"
           className="font-grotesk text-lg font-semibold tracking-tight text-ink"
         >
-          Johny Memo
+          Memo+
         </Link>
 
         <nav className="hidden items-center gap-10 md:flex" aria-label="Primary">

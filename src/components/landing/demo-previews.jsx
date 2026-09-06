@@ -1,4 +1,4 @@
-// Miniature, honest previews of each real surface inside Johny Memo — not
+// Miniature, honest previews of each real surface inside Memo+ — not
 // generic placeholder boxes. Deliberately monochrome; the accent shows up
 // once per preview (a "today" marker, a highlighted stat), never painted
 // across the whole thing.

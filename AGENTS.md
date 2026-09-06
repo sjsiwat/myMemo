@@ -17,7 +17,7 @@ Extract and apply:
 - component style
 - visual rhythm
 
-Apply them to JohnyMemo.
+Apply them to Memo+.
 
 Design style:
 

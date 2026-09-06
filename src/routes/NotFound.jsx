@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useDocumentTitle } from "@/lib/useDocumentTitle";
 
 export default function NotFound() {
-  useDocumentTitle("Johny Memo — ไม่พบหน้านี้");
+  useDocumentTitle("Memo+ — ไม่พบหน้านี้");
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-5 bg-canvas px-6 text-center">
