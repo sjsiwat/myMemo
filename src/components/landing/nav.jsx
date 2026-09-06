@@ -9,12 +9,15 @@ export function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-hairline bg-paper/95 backdrop-blur-sm">
       <div className="mx-auto flex max-w-edit items-center justify-between px-6 py-5 md:px-10">
-        <Link
-          to="/"
-          className="font-grotesk text-lg font-semibold tracking-tight text-ink"
-        >
-          Memo+
-        </Link>
+        <div className="flex items-center gap-2.5">
+          <NotifyLink />
+          <Link
+            to="/"
+            className="font-grotesk text-lg font-semibold tracking-tight text-ink"
+          >
+            Memo+
+          </Link>
+        </div>
 
         <nav className="hidden items-center gap-10 md:flex" aria-label="Primary">
           {navLinks.map((link) => (
@@ -84,6 +87,31 @@ export function Nav() {
         </nav>
       </div>
     </header>
+  );
+}
+
+// Shortcut to the companion app (notify.siwat.me) — its own login gate
+// keeps anyone but the owner out, so this link is safe to show publicly.
+function NotifyLink() {
+  return (
+    <a
+      href="https://notify.siwat.me"
+      target="_blank"
+      rel="noopener noreferrer"
+      title="notify"
+      aria-label="Open notify"
+      className="inline-flex shrink-0 transition-transform duration-200 hover:-rotate-6"
+    >
+      <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true">
+        <rect x="1" y="1" width="30" height="30" rx="7" fill="#fffbf2" stroke="#18130f" strokeWidth="2" />
+        <path fill="#18130f" d="M6 14 3 3l10 7z" />
+        <path fill="#18130f" d="M26 14 29 3l-10 7z" />
+        <circle cx="16" cy="18" r="11" fill="#18130f" />
+        <circle cx="12" cy="17" r="1.4" fill="#ff441c" />
+        <circle cx="20" cy="17" r="1.4" fill="#ff441c" />
+        <path d="M15 21l1 1 1-1z" fill="#fffbf2" />
+      </svg>
+    </a>
   );
 }
 
