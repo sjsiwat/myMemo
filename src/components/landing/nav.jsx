@@ -9,8 +9,9 @@ export function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-hairline bg-paper/95 backdrop-blur-sm">
       <div className="mx-auto flex max-w-edit items-center justify-between px-6 py-5 md:px-10">
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-4">
           <NotifyLink />
+          <span className="h-5 w-px bg-hairline" aria-hidden="true" />
           <Link
             to="/"
             className="font-grotesk text-lg font-semibold tracking-tight text-ink"
