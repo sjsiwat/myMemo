@@ -21,7 +21,7 @@ export const indexEntries = [
     number: "01",
     name: "Dashboard",
     description:
-      "The daily command surface — today's tasks, spending, notes, and calendar collapsed into one glance.",
+      "The daily command surface — today's tasks, cashflow, notes, and calendar collapsed into one glance.",
     category: "Personal OS · Overview",
     outcome: "Daily planning down to under five minutes.",
   },
@@ -29,7 +29,7 @@ export const indexEntries = [
     number: "02",
     name: "Tasks",
     description:
-      "A kanban board with priority, due dates, and labels — built for a queue of one person's real work.",
+      "A kanban board with priority, due dates, and labels — accessible on desktop and via LINE LIFF.",
     category: "Personal OS · Execution",
     outcome: "Every open commitment visible in one board, none of it held in your head.",
   },
@@ -37,7 +37,7 @@ export const indexEntries = [
     number: "03",
     name: "Notes",
     description:
-      "Fast capture for ideas and half-formed thoughts, tagged and searchable, writable from inside LINE.",
+      "Fast capture for ideas and half-formed thoughts, tagged and searchable, writable directly inside LINE.",
     category: "Personal OS · Capture",
     outcome: "An idea takes as long to save as it takes to have.",
   },
@@ -45,9 +45,9 @@ export const indexEntries = [
     number: "04",
     name: "Expenses",
     description:
-      "Categorized spending records, logged in one line — \"จ่ายกาแฟ 80\" becomes a record instantly.",
+      "Categorized spending and income records, logged in one line — \"จ่ายกาแฟ 80\" or \"รับเงินเดือน 30000\" balanced instantly.",
     category: "Personal OS · Money",
-    outcome: "Spending logged the moment it happens, not reconstructed at month-end.",
+    outcome: "Cashflow tracked the moment it happens, not reconstructed at month-end.",
   },
   {
     number: "05",
@@ -60,67 +60,63 @@ export const indexEntries = [
     number: "06",
     name: "Review",
     description:
-      "Daily and weekly summaries — tasks done, overdue, notes written, money spent.",
+      "Daily and weekly summaries — tasks completed, overdue items, notes taken, income, and spending.",
     category: "Personal OS · Reflection",
     outcome: "A five-minute weekly check-in instead of a guess.",
   },
 ];
 
- 
-
 export const capabilities = [
   {
     number: "A",
-    title: "Instant capture",
+    title: "Instant omni-capture",
     description:
-      "Add a task, note, or expense in one line, from anywhere. No modal, no multi-step form standing between a thought and the record of it.",
+      "Add a task, note, expense, or income in one natural line. No modal, no multi-step form standing between a thought and the record of it.",
   },
   {
     number: "B",
-    title: "LINE-native input",
+    title: "LINE Bot & Rich Menu",
     description:
-      "Message Memo+ directly — \"เพิ่มงาน ส่งรายงาน #urgent\" — and it lands in the right place without opening the app.",
+      "Message Memo+ naturally — \"จ่ายกาแฟ 65\", \"รับเงินเดือน 30000\", \"เพิ่มงาน ส่งสไลด์ #urgent\". Auto-categorized instantly, with a full 6-tile Rich Menu ready on tap.",
   },
   {
     number: "C",
-    title: "Local-first storage",
+    title: "Embedded LIFF Micro-Apps",
     description:
-      "Everything works offline, immediately, stored on the device first. Speed isn't a network round-trip away.",
+      "Open interactive Kanban boards, transaction logs, and financial summaries directly inside LINE without switching apps or logging in again.",
   },
   {
     number: "D",
-    title: "Cloud sync, by choice",
+    title: "Real-time edge sync",
     description:
-      "Sign in with LINE when you want your data to follow you across devices. Until then, nothing leaves your browser.",
+      "Powered by Cloudflare Workers and Supabase PostgreSQL. Every record stays synchronized across LINE chat, LIFF, and the web workspace in sub-second time.",
   },
 ];
-
- 
 
 export const processSteps = [
   {
     number: "01",
     title: "Start from the moment, not the feature",
     description:
-      "Every decision starts with one question: how fast can a real thought — a task, a note, an expense — become a saved record? The interface exists to answer that, not to look complete.",
+      "Every decision starts with one question: how fast can a real thought — a task, a note, an expense, or an income — become a saved record? The interface exists to answer that with zero friction, not to look complicated.",
   },
   {
     number: "02",
-    title: "Local first, cloud second",
+    title: "Meet you where your day happens",
     description:
-      "The app is built to work fully offline before it's built to sync. Reliability isn't a feature added later — it's the floor everything else stands on.",
+      "Instead of demanding a separate app to be opened, Memo+ lives right inside LINE. A conversational bot, an always-ready Rich Menu, and embedded LIFF micro-apps turn daily chat into an effortless personal OS.",
   },
   {
     number: "03",
-    title: "Meet the user where they already are",
+    title: "Zero-latency edge architecture",
     description:
-      "Instead of asking for another app to be opened, Memo+ listens inside LINE — where the day is already happening — and turns a message into structured data.",
+      "Engineered on Cloudflare Workers edge network and real-time cloud data. Instant webhook replies, sub-second LIFF loads, and continuous sync ensure your records are always immediate and reliable.",
   },
   {
     number: "04",
-    title: "Ship the calm version",
+    title: "Ship the calm, unified workspace",
     description:
-      "Every screen is checked against one standard: does this reduce what has to be held in the user's head today? If a feature adds decisions without removing any, it doesn't ship.",
+      "Every screen is checked against one standard: does this reduce what has to be held in your head today? Swiss minimal design, warm luxury tones, and zero noise — giving you clarity instead of clutter.",
   },
 ];
 
@@ -129,7 +125,7 @@ export const pointOfView =
 
 export const testimonial = {
   quote:
-    "I built Memo+ because nothing else fit the way I actually work. It captures a task, a note, or an expense in a single line — from LINE, or from the app — and it keeps everything on my device until I decide to sync. It removes the friction between having a thought and saving it, so my head stays clear for the work that matters.",
+    "I built Memo+ because nothing else fit the way I actually work. It captures tasks, notes, expenses, and income in a single line — from LINE chat, LIFF, or the web workspace — and keeps everything synced in real time. It removes the friction between having a thought and saving it, so my head stays clear for the work that matters.",
   name: "Siwat J.",
   role: "Developer, Memo+",
 };
@@ -142,7 +138,7 @@ export const finalCta = {
 
 export const signup = {
   heading: "Create your workspace",
-  body: "Sign up once, and Memo+ syncs your tasks, notes, and expenses across every device you use — LINE included.",
+  body: "Sign up once, and Memo+ syncs your tasks, notes, income, and expenses across every device you use — LINE included.",
   action: "Continue to Sign Up",
 };
 

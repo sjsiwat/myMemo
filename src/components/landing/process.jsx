@@ -4,13 +4,16 @@ export function Process() {
   return (
     <section id="process" className="border-b border-hairline px-6 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-edit">
+        <p className="mb-4 font-grotesk text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+          Process & Principles
+        </p>
         <h2 className="max-w-2xl font-grotesk text-4xl font-semibold tracking-tight text-ink md:text-5xl">
           Not just how it looks —
           <br />
           how it thinks.
         </h2>
         <p className="mt-6 max-w-xl text-sm leading-relaxed text-ink-muted">
-          Four rules the product answers to before any screen gets drawn.
+          Four principles the system answers to before any screen or webhook gets shipped.
         </p>
 
         <div className="mt-16 grid grid-cols-1 gap-x-8 gap-y-14 border-t border-hairline pt-10 md:grid-cols-2">

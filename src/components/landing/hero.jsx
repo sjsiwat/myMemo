@@ -8,7 +8,7 @@ const flow = [
   },
   {
     label: "Organize",
-    detail: "Sorted into a task, a note, or an expense — automatically.",
+    detail: "Sorted into a task, a note, an expense, or income — automatically.",
   },
   {
     label: "Recall",
@@ -38,7 +38,7 @@ export function Hero() {
             variants={reveal}
             className="mb-6 font-grotesk text-xs font-semibold uppercase tracking-[0.18em] text-accent"
           >
-            Personal Operating System — 2026
+            PERSONAL OPERATING SYSTEM
           </motion.p>
 
           <motion.h1
@@ -53,22 +53,37 @@ export function Hero() {
             +
           </motion.h1>
 
-          <motion.p
+          <motion.h2
             initial="hidden"
             animate="show"
             custom={2}
             variants={reveal}
-            className="mt-8 max-w-md text-lg leading-relaxed text-ink-muted"
+            className="mt-8 font-grotesk text-2xl font-medium tracking-tight text-ink sm:text-3xl"
           >
-            A private workspace for one person&apos;s tasks, notes, and money —
-            captured in a single line, on LINE or off it, and stored on your
-            device before it ever touches a server.
-          </motion.p>
+            Your personal operating system
+            <br className="hidden sm:inline" />{" "}
+            for everyday life.
+          </motion.h2>
 
           <motion.div
             initial="hidden"
             animate="show"
             custom={3}
+            variants={reveal}
+            className="mt-4 max-w-lg space-y-1.5 text-base leading-relaxed text-ink-muted sm:text-lg"
+          >
+            <p className="font-medium text-ink">
+              Capture anything. Organize everything.
+            </p>
+            <p>
+              Tasks, money, notes, and everyday things — captured in seconds and managed in one simple workspace.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            animate="show"
+            custom={4}
             variants={reveal}
             className="mt-10 flex flex-wrap items-center gap-4"
           >

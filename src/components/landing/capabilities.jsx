@@ -8,12 +8,15 @@ export function Capabilities() {
     >
       <div className="mx-auto grid max-w-edit grid-cols-1 gap-12 md:grid-cols-12 md:gap-8">
         <div className="md:col-span-4">
+          <p className="mb-3 font-grotesk text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+            Services & Capabilities
+          </p>
           <h2 className="font-grotesk text-4xl font-semibold tracking-tight text-ink md:text-5xl">
             What it actually does
           </h2>
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-ink-muted">
-            Four decisions the whole app is built around — not a feature
-            list, a set of constraints.
+            Four pillars the system is built around — instant capture,
+            conversational LINE bot, embedded LIFF micro-apps, and real-time edge sync.
           </p>
         </div>
 
