@@ -19,6 +19,15 @@ export function AppLayout() {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
+  // If a LIFF deep link inadvertently resolved to desktop app routes, route back to /liff
+  useEffect(() => {
+    const search = window.location.search;
+    if (search.includes("liff.state") || search.includes("liff=")) {
+      const cleanPath = window.location.pathname.replace(/^\/liff/, "");
+      window.location.replace(`/liff${cleanPath}${window.location.search}`);
+    }
+  }, []);
+
   if (!auth.authReady) {
     return <div className="min-h-screen bg-canvas" />;
   }

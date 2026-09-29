@@ -34,3 +34,4 @@ not_found_handling = "single-page-application"
 [vars]
 LINE_CHANNEL_ID = "2010502491"
 SUPABASE_URL = "https://amcutibopnfasxrfexdi.supabase.co"
+LINE_LIFF_ID = "2010502491-uIBFxjTa"

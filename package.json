@@ -6,10 +6,15 @@
     "dev": "vite",
     "build": "vite build && cp server/headers web_dist/_headers",
     "preview": "vite preview",
-    "deploy": "./scripts/deploy.sh"
+    "deploy": "./scripts/deploy.sh",
+    "richmenu:create": "node scripts/richmenu.js create",
+    "richmenu:list": "node scripts/richmenu.js list",
+    "richmenu:delete": "node scripts/richmenu.js delete",
+    "richmenu:generate-image": "node scripts/generate-richmenu-image.js"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
+    "@line/liff": "^2.31.0",
     "@supabase/supabase-js": "^2.47.10",
     "@tiptap/extension-color": "^2.11.5",
     "@tiptap/extension-font-family": "^2.11.5",

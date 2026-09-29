@@ -5,6 +5,8 @@ node_modules/
 .env
 .env.local
 *.tsbuildinfo
+.chrome_tmp/
+
 
 # Build output — rebuilt by scripts/deploy.sh
 /web_dist/
