@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <title>Memo+ Promo 3 - Cheat Sheet</title>
+  
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500;1,6..72,600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :root {
+      --c-canvas: #F7F6F2;
+      --c-paper: #FFFFFF;
+      --c-paper-dim: #F0EFEA;
+      --c-hairline: #DDDAD2;
+      --c-hairline-dark: #C9C5BB;
+      --c-ink: #1C1C1C;
+      --c-ink-muted: #6F6B63;
+      --c-ink-faint: #9A968D;
+      --c-accent: #756580;
+      --c-accent-fg: #FFFFFF;
+      --c-accent-dim: #63546D;
+      --c-success: #2E7D32;
+      --c-success-bg: rgba(46, 125, 50, 0.08);
+      --c-danger: #C62828;
+      --c-danger-bg: rgba(198, 40, 40, 0.08);
+      --c-warning: #E65100;
+      --c-warning-bg: rgba(230, 81, 0, 0.08);
+    }
+
+    body {
+      background-color: var(--c-canvas);
+      font-family: 'Mitr', -apple-system, BlinkMacSystemFont, 'Sukhumvit Set', sans-serif;
+      color: var(--c-ink);
+      overflow: hidden;
+    }
+
+    .font-num {
+      font-family: 'Newsreader', Georgia, serif;
+      font-style: italic;
+    }
+
+    .tag {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--c-accent);
+    }
+
+    .card {
+      background-color: var(--c-paper);
+      border: 1.5px solid var(--c-hairline);
+    }
+
+    .code-pill {
+      display: inline-block;
+      padding: 6px 14px;
+      background-color: var(--c-paper-dim);
+      border: 1px solid var(--c-hairline);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 16px;
+      color: var(--c-ink);
+      font-weight: 600;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+  </style>
+
+  <style>
+    body {
+      width: 1080px;
+      height: 1350px;
+      padding: 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1.5px solid var(--c-hairline);
+      padding-bottom: 24px;
+    }
+
+    .brand-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--c-ink);
+    }
+
+    .sections-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .command-box {
+      background: var(--c-paper);
+      border: 1.5px solid var(--c-hairline);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .cmd-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--c-hairline);
+      padding-bottom: 10px;
+    }
+
+    .cmd-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--c-ink);
+    }
+
+    .cmd-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cmd-desc {
+      font-size: 13px;
+      color: var(--c-ink-muted);
+    }
+
+    .tip-box {
+      background: var(--c-paper-dim);
+      border: 1.5px solid var(--c-hairline);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-bar {
+      border-top: 1.5px solid var(--c-hairline);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <div class="brand-title">Memo+</div>
+    <div class="tag">COMMAND CHEAT-SHEET</div>
+  </div>
+
+  <div>
+    <p class="tag">EASY TO USE</p>
+    <h1 style="font-size: 50px; font-weight: 700; margin-top: 6px; letter-spacing: -0.02em;">
+      รวมคำสั่งพิมพ์คุยกับบอท Johny
+    </h1>
+    <p style="font-size: 18px; color: var(--c-ink-muted); margin-top: 6px;">
+      พิมพ์สั้นๆ บรรทัดเดียวในแชต LINE ระบบเข้าใจภาษาไทยและบันทึกอัตโนมัติทันที
+    </p>
+  </div>
+
+  <div class="sections-grid">
+
+    <!-- Box 1: รายจ่าย -->
+    <div class="command-box">
+      <div class="cmd-header">
+        <span class="cmd-title">💸 บันทึกรายจ่าย</span>
+        <span class="status-badge" style="background: var(--c-danger-bg); color: var(--c-danger);">EXPENSES</span>
+      </div>
+
+      <div class="cmd-row">
+        <span class="code-pill">จ่าย กาแฟ 65</span>
+        <span class="cmd-desc">บันทึกกาแฟ 65 บาท (หมวดอาหาร)</span>
+      </div>
+
+      <div class="cmd-row">
+        <span class="code-pill">ค่าข้าว 80</span>
+        <span class="cmd-desc">พิมพ์แค่ "ค่าข้าว" บอทก็เข้าใจ</span>
+      </div>
+
+      <div class="cmd-row">
+        <span class="code-pill">เติมน้ำมัน 800</span>
+        <span class="cmd-desc">จัดเข้าหมวดเดินทางให้อัตโนมัติ</span>
+      </div>
+
+      <div class="cmd-row">
+        <span class="code-pill">ช้อปปิ้ง เสื้อ 450</span>
+        <span class="cmd-desc">จัดเข้าหมวดช้อปปิ้ง</span>
+      </div>
+    </div>
+
+    <!-- Box 2: รายรับ -->
+    <div class="command-box">
+      <div class="cmd-header">
+        <span class="cmd-title">💰 บันทึกรายรับ</span>
+        <span class="status-badge" style="background: var(--c-success-bg); color: var(--c-success);">INCOME</span>
+      </div>
+
+      <div class="cmd-row">
+        <span class="code-pill">รับ เงินเดือน 30000</span>
+        <span class="cmd-desc">บันทึกเงินเดือนเข้าบัญชี</span>
+      </div>
+
+      <div class="cmd-row">
+        <span class="code-pill">ได้เงิน ค่าขนม 500</span>
+        <span class="cmd-desc">บันทึกรายรับทั่วไป</span>
+      </div>
+
+      <div class="cmd-row">
+        <span class="code-pill">ขายของได้ 1500</span>
+        <span class="cmd-desc">บันทึกรายได้จากธุรกิจ/การขาย</span>
+      </div>
+
+      <div class="cmd-row">
+        <span class="code-pill">โบนัส 10000</span>
+        <span class="cmd-desc">บันทึกโบนัสหรือเงินรางวัล</span>
+      </div>
+    </div>
+
+    <!-- Box 3: บันทึกงาน -->
+    <div class="command-box">
+      <div class="cmd-header">
+        <span class="cmd-title">📋 บันทึกงาน & สิ่งที่ต้องทำ</span>
+        <span class="status-badge" style="background: var(--c-warning-bg); color: var(--c-warning);">TASKS</span>
+      </div>
+
+      <div class="cmd-row">
+        <span class="code-pill">เพิ่มงาน ส่งรายงาน #urgent</span>
+        <span class="cmd-desc">สร้างงานใหม่พร้อมติดแท็กความสำคัญด่วน</span>
+      </div>
+
+      <div class="cmd-row">
+        <span class="code-pill">ทำ ออกกำลังกาย วันพรุ่งนี้</span>
+        <span class="cmd-desc">ระบุวันกำหนดส่งงานได้ในตัว</span>
+      </div>
+
+      <div class="cmd-row">
+        <span class="code-pill">นัด ประชุมลูกค้า 14:00</span>
+        <span class="cmd-desc">บันทึกนัดหมายหรือสิ่งที่ต้องติดตาม</span>
+      </div>
+    </div>
+
+    <!-- Box 4: โน้ต & คำสั่งเรียกดู -->
+    <div class="command-box">
+      <div class="cmd-header">
+        <span class="cmd-title">📝 โน้ต & สรุปภาพรวม</span>
+        <span class="status-badge" style="background: rgba(117, 101, 128, 0.1); color: var(--c-accent);">QUICK NOTES</span>
+      </div>
+
+      <div class="cmd-row">
+        <span class="code-pill">โน้ต ไอเดียโปรเจกต์ #idea</span>
+        <span class="cmd-desc">จดโน้ตพร้อมติดแท็กค้นหา</span>
+      </div>
+
+      <div class="cmd-row">
+        <span class="code-pill">สรุป</span>
+        <span class="cmd-desc">ดูสรุปรายรับ-รายจ่ายและงานวันนี้</span>
+      </div>
+
+      <div class="cmd-row">
+        <span class="code-pill">รายจ่าย / รายรับ / งาน</span>
+        <span class="cmd-desc">พิมพ์ชื่อเพื่อดูประวัติล่าสุดแยกหมวด</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tip-box">
+    <div>
+      <span style="font-weight: 600; font-size: 16px;">💡 พิมพ์ติดกันได้ ไม่ต้องเว้นวรรค:</span>
+      <span style="font-size: 15px; color: var(--c-ink-muted); margin-left: 8px;">
+        เช่น "จ่ายกาแฟ65บาท", "รับเงินเดือน30000", "ค่าข้าว80" ระบบอ่านได้เหมือนกัน
+      </span>
+    </div>
+    <span class="tag">AI PARSER</span>
+  </div>
+
+  <div class="footer-bar">
+    <div style="font-size: 16px; color: var(--c-ink-muted);">
+      ทดลองพิมพ์ได้เลยที่ LINE: @324ywxny
+    </div>
+    <div class="line-id-pill" style="padding: 6px 16px; font-size: 14px;">
+      FREE TO USE
+    </div>
+  </div>
+
+</body>
+</html>

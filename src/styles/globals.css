@@ -150,10 +150,26 @@ dialog::backdrop {
 
 .doc-editor-content .ProseMirror {
   position: relative;
-  min-height: 1000px;
-  padding: 4rem;
+  z-index: 1;
+  min-height: 1123px;
+  padding: 64px;
   outline: none;
   line-height: 1.7;
+  background: transparent;
+}
+
+.doc-editor-content .ProseMirror hr.doc-page-break {
+  position: relative;
+  border: 0;
+  border-top: 1px dashed rgb(var(--c-border-strong));
+  margin: 0.5rem 0;
+  height: 1px;
+  cursor: pointer;
+}
+
+.doc-editor-content .ProseMirror hr.doc-page-break.ProseMirror-selectednode {
+  border-top-color: rgb(var(--c-accent));
+  border-top-width: 2px;
 }
 
 .doc-editor-content .ProseMirror p {

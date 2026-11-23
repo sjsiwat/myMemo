@@ -9,6 +9,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import Placeholder from "@tiptap/extension-placeholder";
 import Highlight from "@tiptap/extension-highlight";
 import { ResizableImage } from "@/lib/tiptapResizableImage";
+import { A4Pagination, PageBreak, A4_WIDTH, A4_HEIGHT, A4_GAP } from "@/lib/tiptapPagination";
 import {
   Bold,
   Italic,
@@ -21,6 +22,7 @@ import {
   ListOrdered,
   Quote,
   ImagePlus,
+  SeparatorHorizontal,
   X,
   RemoveFormatting,
 } from "lucide-react";
@@ -51,26 +53,28 @@ const DOC_HL_SWATCHES = [
   "#ffadad", "#d0f4de", "#ffe066", "#c1fba4", "#9bf6ff", "#e2e2e2",
 ];
 
-function insertImageFile(
-  editor,
-  file,
-  insertCountRef,
-  dirtyRef
-) {
+function insertImageFile(editor, file, dirtyRef, insertPos) {
   const reader = new FileReader();
   reader.onload = () => {
-    const src = reader.result ;
+    const src = reader.result;
     const img = new window.Image();
     img.onload = () => {
-      const maxWidth = 320;
+      const maxWidth = 480;
       const ratio = img.naturalWidth > 0 ? img.naturalHeight / img.naturalWidth : 0.75;
       const width = Math.min(maxWidth, img.naturalWidth || maxWidth);
-      const height = Math.max(40, Math.round(width * ratio));
-      const offset = (insertCountRef.current++ % 6) * 28;
+      const height = Math.max(48, Math.round(width * ratio));
+      const docSize = editor.state.doc.content.size;
+      const safePos =
+        typeof insertPos === "number"
+          ? Math.min(Math.max(0, insertPos), docSize)
+          : editor.state.selection.from;
       editor
         .chain()
         .focus()
-        .setResizableImage({ src, x: 64 + offset, y: 64 + offset, width, height })
+        .insertContentAt(safePos, {
+          type: "resizableImage",
+          attrs: { src, width, height, align: "left" },
+        })
         .run();
       dirtyRef.current = true;
     };
@@ -93,9 +97,8 @@ function ToolbarButton({
       onClick={onClick}
       aria-label={label}
       title={label}
-      className={`flex h-8 w-8 items-center justify-center border ${
- active ? "border-accent bg-accent text-accent-fg" : "border-transparent text-ink-muted hover:border-hairline"
- }`}
+      className={`flex h-8 w-8 items-center justify-center border ${active ? "border-accent bg-accent text-accent-fg" : "border-transparent text-ink-muted hover:border-hairline"
+        }`}
     >
       {children}
     </button>
@@ -109,9 +112,11 @@ export function DocEditor({ noteId, onClose }) {
   const [title, setTitle] = useState(note?.title ?? "");
   const [showTextSwatches, setShowTextSwatches] = useState(false);
   const [showHlSwatches, setShowHlSwatches] = useState(false);
+  const [pageCount, setPageCount] = useState(1);
   const dirtyRef = useRef(false);
   const saveTimerRef = useRef(null);
-  const insertCountRef = useRef(0);
+  const lastSelectionPosRef = useRef(null);
+  const editorRef = useRef(null);
 
   const editor = useEditor({
     extensions: [
@@ -124,29 +129,40 @@ export function DocEditor({ noteId, onClose }) {
       Highlight.configure({ multicolor: true }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       ResizableImage,
+      PageBreak,
+      A4Pagination.configure({
+        onPageCountChange: (count) => setPageCount(count),
+      }),
       Placeholder.configure({ placeholder: "เริ่มพิมพ์เอกสารของคุณ…" }),
     ],
     content: note?.body || "",
     immediatelyRender: false,
+    onSelectionUpdate: ({ editor: ed }) => {
+      lastSelectionPosRef.current = ed.state.selection.from;
+    },
     onUpdate: () => {
       dirtyRef.current = true;
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
       saveTimerRef.current = setTimeout(saveNow, 1200);
     },
     editorProps: {
-      handlePaste(_view, event) {
-        if (!editor) return false;
+      handlePaste(view, event) {
+        const currentEditor = editorRef.current;
+        if (!currentEditor) return false;
         const files = Array.from(event.clipboardData?.items || [])
           .filter((item) => item.kind === "file" && item.type.startsWith("image/"))
           .map((item) => item.getAsFile())
           .filter((file) => !!file);
         if (files.length === 0) return false;
         event.preventDefault();
-        files.forEach((file) => insertImageFile(editor, file, insertCountRef, dirtyRef));
+        const pastePos = view.state.selection.from;
+        files.forEach((file) => insertImageFile(currentEditor, file, dirtyRef, pastePos));
         return true;
       },
     },
   });
+
+  editorRef.current = editor;
 
   const saveNow = useCallback(() => {
     if (!editor) return;
@@ -181,7 +197,8 @@ export function DocEditor({ noteId, onClose }) {
   function insertImage(e) {
     const file = e.target.files?.[0];
     if (!file || !editor) return;
-    insertImageFile(editor, file, insertCountRef, dirtyRef);
+    const pos = lastSelectionPosRef.current ?? editor.state.selection.from;
+    insertImageFile(editor, file, dirtyRef, pos);
     e.target.value = "";
   }
 
@@ -244,7 +261,7 @@ export function DocEditor({ noteId, onClose }) {
             const chain = editor.chain().focus();
             if (v === "p") chain.setParagraph().run();
             else if (v === "blockquote") chain.toggleBlockquote().run();
-            else chain.toggleHeading({ level: Number(v)  }).run();
+            else chain.toggleHeading({ level: Number(v) }).run();
           }}
           className="border border-hairline bg-paper px-2 py-1 text-xs"
           defaultValue="p"
@@ -360,9 +377,18 @@ export function DocEditor({ noteId, onClose }) {
           <ImagePlus size={14} aria-hidden />
           <input type="file" accept="image/*" onChange={insertImage} className="hidden" />
         </label>
+        <ToolbarButton
+          label="แบ่งหน้า A4 (Ctrl+Enter)"
+          onClick={() => editor.chain().focus().insertPageBreak().run()}
+        >
+          <SeparatorHorizontal size={14} aria-hidden />
+        </ToolbarButton>
         <ToolbarButton label="ล้างรูปแบบ" onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}>
           <RemoveFormatting size={14} aria-hidden />
         </ToolbarButton>
+        <span className="ml-auto font-serif text-xs italic text-ink-muted">
+          A4 · {pageCount} หน้า
+        </span>
       </div>
 
       <div
@@ -370,10 +396,34 @@ export function DocEditor({ noteId, onClose }) {
         onClick={() => editor.chain().focus().run()}
       >
         <div
-          className="mx-auto max-w-[794px] border border-hairline bg-paper shadow-none"
+          className="relative mx-auto"
+          style={{
+            width: A4_WIDTH,
+            maxWidth: "100%",
+            minHeight: pageCount * A4_HEIGHT + (pageCount - 1) * A4_GAP,
+          }}
           onClick={(e) => e.stopPropagation()}
         >
-          <EditorContent editor={editor} className="doc-editor-content" />
+          {/* Discrete MS Word-style A4 paper sheets */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 z-0 flex flex-col"
+            style={{ gap: A4_GAP }}
+          >
+            {Array.from({ length: pageCount }, (_, idx) => (
+              <div
+                key={idx}
+                className="relative w-full border border-hairline bg-paper"
+                style={{ height: A4_HEIGHT }}
+              >
+                <span className="absolute bottom-5 right-8 font-serif text-xs italic text-ink-muted">
+                  หน้า {idx + 1} / {pageCount}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <EditorContent editor={editor} className="doc-editor-content relative z-[1]" />
         </div>
       </div>
     </div>
