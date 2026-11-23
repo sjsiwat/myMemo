@@ -15,7 +15,8 @@ export default function NotesPage() {
 
   function handleNewDoc() {
     const id = crypto.randomUUID();
-    addNoteToStore({ id, title: "", body: "<p></p>", tags: "", createdAt: Date.now() });
+    const now = Date.now();
+    addNoteToStore({ id, title: "", body: "<p></p>", tags: "", createdAt: now, updatedAt: now });
     setDocEditId(id);
   }
 

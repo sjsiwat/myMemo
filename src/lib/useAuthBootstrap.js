@@ -1,31 +1,46 @@
 import { useEffect, useRef, useState } from "react";
 
 import { Auth } from "@/lib/auth";
-import { Storage } from "@/lib/storage";
-import { defaultAppState, useStore } from "@/lib/store";
+import { db } from "@/lib/supabaseClient";
+import { ROW_MAPPERS, Storage } from "@/lib/storage";
+import { defaultAppState, setLocalMutationListener, useStore } from "@/lib/store";
 import { useToastStore } from "@/lib/toastStore";
 import { normalizeStatus } from "@/lib/constants";
 
 // Guard against onSignedIn firing twice for the same user — Auth.init()'s
 // synchronous session check and the async SIGNED_IN event can both fire for
-// the same login. Module-level (not a ref) so it survives even a
-// dev-StrictMode remount, matching the robustness of the legacy app.js guard.
+// the same login.
 let syncedUserId = null;
+
+function normalizeTask(t) {
+  return {
+    ...t,
+    description: t.description ?? "",
+    labels: Array.isArray(t.labels) ? t.labels : [],
+    target_value: t.target_value ?? null,
+    target_unit: t.target_unit ?? "",
+    progress_value: t.progress_value ?? 0,
+    status: normalizeStatus(t.status),
+  };
+}
 
 function withTaskDefaults(state) {
   return {
     ...state,
-    tasks: (state.tasks || []).map((t) => ({
-      ...t,
-      description: t.description ?? "",
-      labels: t.labels ?? [],
-      target_value: t.target_value ?? null,
-      target_unit: t.target_unit ?? "",
-      progress_value: t.progress_value ?? 0,
-      status: normalizeStatus(t.status),
-    })),
+    tasks: (state.tasks || []).map(normalizeTask),
     notes: state.notes || [],
     expenses: state.expenses || [],
+  };
+}
+
+function getSnapshot() {
+  const s = useStore.getState();
+  return {
+    theme: s.theme,
+    tasks: s.tasks,
+    notes: s.notes,
+    expenses: s.expenses,
+    logs: s.logs,
   };
 }
 
@@ -39,11 +54,13 @@ export function useAuthBootstrap() {
 
   const authedRef = useRef(authed);
   const uidRef = useRef(null);
+  const syncingRef = useRef(false);
   authedRef.current = authed;
 
   const showToast = useToastStore((s) => s.showToast);
   const setSyncStatus = useStore((s) => s.setSyncStatus);
   const setAll = useStore((s) => s.setAll);
+  const setAllFromSync = useStore((s) => s.setAllFromSync);
   const setHydrated = useStore((s) => s.setHydrated);
 
   function clearToLoggedOut() {
@@ -55,6 +72,53 @@ export function useAuthBootstrap() {
     setAuthed(false);
     setUser(null);
     setLineInfo(null);
+  }
+
+  async function syncWithCloud(uid, { showToastOnLoad = false } = {}) {
+    if (!uid || syncingRef.current) return;
+    if (typeof navigator !== "undefined" && navigator.onLine === false) {
+      setSyncStatus("offline");
+      return;
+    }
+
+    syncingRef.current = true;
+    try {
+      // 1. Flush any queued offline creates/edits/deletes first
+      await Storage.flushOutbox(uid);
+
+      // 2. Pull latest cloud state and merge with any remaining pending outbox ops
+      if (showToastOnLoad) setSyncStatus("loading");
+      const merged = await Storage.pullAndMerge(uid, useStore.getState());
+
+      if (merged && uidRef.current === uid) {
+        const current = useStore.getState();
+        const nextState = withTaskDefaults({
+          theme: current.theme,
+          logs: current.logs,
+          tasks: merged.tasks,
+          notes: merged.notes,
+          expenses: merged.expenses,
+        });
+        setAllFromSync(nextState);
+        Storage.saveSnapshot(nextState, true);
+
+        if (showToastOnLoad) {
+          showToast(
+            nextState.tasks.length > 0
+              ? `โหลดข้อมูลจาก cloud (${nextState.tasks.length} งาน)`
+              : "เชื่อมต่อแล้ว ✓",
+            "success"
+          );
+        }
+      }
+
+      const st = useStore.getState().syncStatus;
+      if (Storage.getOutbox().length === 0 && (st === "loading" || st === "offline")) {
+        setSyncStatus("idle");
+      }
+    } finally {
+      syncingRef.current = false;
+    }
   }
 
   async function onSignedIn(signedInUser) {
@@ -69,31 +133,7 @@ export function useAuthBootstrap() {
     const info = await Auth.fetchLineInfo();
     setLineInfo(info);
 
-    setSyncStatus("loading");
-    const cloud = await Storage.loadCloud(signedInUser.id);
-
-    if (cloud) {
-      const current = useStore.getState();
-      const merge = (localArr, cloudArr) => {
-        const cloudIds = new Set(cloudArr.map((i) => i.id));
-        const localOnly = localArr.filter((i) => !cloudIds.has(i.id));
-        return [...cloudArr, ...localOnly];
-      };
-      const merged = {
-        theme: current.theme,
-        logs: current.logs,
-        tasks: merge(current.tasks, cloud.tasks),
-        notes: merge(current.notes, cloud.notes),
-        expenses: merge(current.expenses, cloud.expenses),
-      };
-      setAll(merged);
-      showToast(
-        merged.tasks.length > 0 ? `โหลดข้อมูลจาก cloud (${merged.tasks.length} งาน)` : "เชื่อมต่อแล้ว ✓",
-        "success"
-      );
-    }
-    // loadCloud failure is non-critical — local data still intact, next save will retry
-    setSyncStatus("idle");
+    await syncWithCloud(signedInUser.id, { showToastOnLoad: true });
   }
 
   useEffect(() => {
@@ -123,6 +163,8 @@ export function useAuthBootstrap() {
       const sessionUser = await Auth.init();
       setUser(sessionUser);
       if (sessionUser) {
+        uidRef.current = sessionUser.id;
+        setAuthed(true);
         await onSignedIn(sessionUser);
       } else {
         if (usedCachedLocal) clearToLoggedOut();
@@ -155,42 +197,122 @@ export function useAuthBootstrap() {
         );
       }
     });
-    const handleOnline = () => setSyncStatus("idle");
+
+    // ── Auto-sync when connectivity returns or tab becomes visible ──
+    const handleOnline = () => {
+      if (authedRef.current && uidRef.current) {
+        syncWithCloud(uidRef.current);
+      } else {
+        setSyncStatus("idle");
+      }
+    };
     const handleOffline = () => setSyncStatus("offline");
+    const handleVisibilityChange = () => {
+      if (
+        document.visibilityState === "visible" &&
+        navigator.onLine !== false &&
+        authedRef.current &&
+        uidRef.current
+      ) {
+        syncWithCloud(uidRef.current);
+      }
+    };
+
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    if (typeof navigator !== "undefined" && navigator.onLine === false) {
+      setSyncStatus("offline");
+    }
 
     return () => {
       sub.subscription.unsubscribe();
       Storage.onSyncChange(null);
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ── Persistence subscription: whenever tasks/notes/expenses/theme change
-  // (after hydration), save locally + debounce a cloud push — mirrors the
-  // legacy app's saveState() call at the end of every render*() function. ──
+  // ── Outbox & local snapshot hook: ONLY local mutations enqueue to Outbox.
+  // Remote sync / Realtime updates use setAllFromSync & applyRemote*, so they
+  // never echo back into the Outbox. ──
   useEffect(() => {
-    let prev = useStore.getState();
-    const unsubscribe = useStore.subscribe((state) => {
-      if (!state.hydrated) return;
-      const changed =
-        state.tasks !== prev.tasks ||
-        state.notes !== prev.notes ||
-        state.expenses !== prev.expenses ||
-        state.theme !== prev.theme;
-      prev = state;
-      if (!changed) return;
-      Storage.save(
-        { theme: state.theme, tasks: state.tasks, notes: state.notes, expenses: state.expenses, logs: state.logs },
-        authedRef.current,
-        uidRef.current
-      );
+    setLocalMutationListener((event) => {
+      if (!useStore.getState().hydrated) return;
+      if (!authedRef.current || !uidRef.current) return;
+
+      Storage.saveSnapshot(getSnapshot(), true);
+
+      if (event.op === "upsert") {
+        Storage.enqueueUpsert(event.table, event.item, true, uidRef.current);
+      } else if (event.op === "delete") {
+        Storage.enqueueDelete(event.table, event.id, true, uidRef.current);
+      }
     });
-    return unsubscribe;
+
+    return () => setLocalMutationListener(null);
   }, []);
+
+  // ── Supabase Realtime live sync (StrictMode-safe lifecycle) ──
+  useEffect(() => {
+    const uid = authed ? user?.id : null;
+    if (!uid) return;
+
+    const handleRealtimeEvent = (table, payload) => {
+      if (uidRef.current !== uid) return;
+      const store = useStore.getState();
+
+      if (payload.eventType === "INSERT" || payload.eventType === "UPDATE") {
+        const mapper = ROW_MAPPERS[table];
+        if (!mapper || !payload.new) return;
+        let item = mapper(payload.new);
+        if (table === "tasks") item = normalizeTask(item);
+
+        // Do not let stale remote events clobber a newer pending local mutation
+        const pending = Storage.getPendingOp(table, item.id);
+        if (pending?.op === "delete") return;
+        if (pending?.op === "upsert" && pending.updatedAt >= item.updatedAt) return;
+
+        store.applyRemoteUpsert(table, item);
+        Storage.saveSnapshot(getSnapshot(), true);
+      } else if (payload.eventType === "DELETE") {
+        const deletedId = payload.old?.id;
+        if (!deletedId) return;
+
+        const pending = Storage.getPendingOp(table, deletedId);
+        if (pending?.op === "upsert") return;
+
+        store.applyRemoteDelete(table, deletedId);
+        Storage.saveSnapshot(getSnapshot(), true);
+      }
+    };
+
+    const channel = db
+      .channel(`memo-sync-${uid}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "tasks", filter: `user_id=eq.${uid}` },
+        (payload) => handleRealtimeEvent("tasks", payload)
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "notes", filter: `user_id=eq.${uid}` },
+        (payload) => handleRealtimeEvent("notes", payload)
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "expenses", filter: `user_id=eq.${uid}` },
+        (payload) => handleRealtimeEvent("expenses", payload)
+      )
+      .subscribe();
+
+    return () => {
+      db.removeChannel(channel);
+    };
+  }, [authed, user?.id]);
 
   return {
     authReady,
@@ -204,9 +326,8 @@ export function useAuthBootstrap() {
       setGateError(null);
       try {
         await Auth.signInWithPassword(email, password);
-        // onSignedIn() runs via the SIGNED_IN event from Auth.onChange() above.
       } catch (err) {
-        setGateError((err ).message || "เข้าสู่ระบบไม่สำเร็จ");
+        setGateError(err.message || "เข้าสู่ระบบไม่สำเร็จ");
         throw err;
       }
     },
@@ -217,16 +338,13 @@ export function useAuthBootstrap() {
         if (!data.session) {
           showToast("สมัครสมาชิกสำเร็จ — โปรดยืนยันอีเมลก่อนเข้าสู่ระบบ", "success");
         }
-        // If email confirmation is disabled, Auth.signUp() already started a
-        // session and the SIGNED_IN event from Auth.onChange() above takes over.
       } catch (err) {
-        setGateError((err ).message || "สมัครสมาชิกไม่สำเร็จ");
+        setGateError(err.message || "สมัครสมาชิกไม่สำเร็จ");
         throw err;
       }
     },
     async signOut() {
       await Auth.signOut();
-      // UI reset happens reactively via the SIGNED_OUT event above.
     },
     initialGateTab,
   };

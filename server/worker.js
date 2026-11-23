@@ -9,7 +9,7 @@ export default {
 
     // Handle CORS preflight for API routes
     if (request.method === 'OPTIONS' && url.pathname.startsWith('/api/')) {
-      return handleCors();
+      return handleCors(null, request);
     }
 
     // Route: LINE OAuth callback (legacy web auth)
@@ -19,7 +19,8 @@ export default {
 
     // Routes: LIFF API
     if (url.pathname.startsWith('/api/liff/')) {
-      return handleLiffApi(request, env, url);
+      const apiResponse = await handleLiffApi(request, env, url);
+      return handleCors(apiResponse, request);
     }
 
     // Everything else → serve static assets
@@ -41,11 +42,43 @@ export default {
   },
 };
 
-// ── CORS Helper ─────────────────────────────────────────────────────────────
+// ── CORS Helper (Strict Origin Allowlist) ────────────────────────────────────
 
-function handleCors(response) {
+const ALLOWED_ORIGINS = new Set([
+  'https://memo.siwat.me',
+  'https://liff.line.me',
+]);
+
+function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  if (ALLOWED_ORIGINS.has(origin)) return true;
+  try {
+    const { protocol, hostname } = new URL(origin);
+    if (protocol === 'https:') {
+      if (
+        hostname.endsWith('.line.me') ||
+        hostname.endsWith('.line-apps.com') ||
+        hostname.endsWith('.workers.dev')
+      ) {
+        return true;
+      }
+    }
+    if (protocol === 'http:' && (hostname === 'localhost' || hostname === '127.0.0.1')) {
+      return true;
+    }
+  } catch {
+    return false;
+  }
+  return false;
+}
+
+function handleCors(response, request) {
   const headers = new Headers(response ? response.headers : undefined);
-  headers.set('Access-Control-Allow-Origin', '*');
+  const origin = request?.headers?.get('Origin') || '';
+  if (isAllowedOrigin(origin)) {
+    headers.set('Access-Control-Allow-Origin', origin);
+    headers.set('Vary', 'Origin');
+  }
   headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
   headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   return new Response(response ? response.body : null, {
@@ -56,12 +89,14 @@ function handleCors(response) {
 }
 
 function jsonResponse(data, status = 200) {
-  return handleCors(
-    new Response(JSON.stringify(data), {
-      status,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  );
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
+function getJwtSecret(env) {
+  return env?.LINE_CHANNEL_SECRET || null;
 }
 
 // ── Cryptographic Session Helpers (Web Crypto HMAC-SHA256) ───────────────────
@@ -161,12 +196,14 @@ async function getAuthUser(request, env) {
   const token = authHeader.slice(7).trim();
   if (!token) return null;
 
-  const secret = env.LINE_CHANNEL_SECRET || 'memo-channel-secret';
+  const secret = getJwtSecret(env);
 
-  // 1. First, check if it's our signed session JWT
-  const jwtPayload = await verifyJwt(token, secret);
-  if (jwtPayload?.userId) {
-    return { userId: jwtPayload.userId, lineUserId: jwtPayload.lineUserId };
+  // 1. First, check if it's our signed session JWT (only when secret is configured)
+  if (secret) {
+    const jwtPayload = await verifyJwt(token, secret);
+    if (jwtPayload?.userId) {
+      return { userId: jwtPayload.userId, lineUserId: jwtPayload.lineUserId };
+    }
   }
 
   // 2. Fallback: if caller sent a raw LINE ID token directly, verify with LINE Platform
@@ -324,8 +361,12 @@ async function handleLiffApi(request, env, url) {
         }).catch(() => {});
       }
 
-      // Generate session token (valid 24h)
-      const secret = env.LINE_CHANNEL_SECRET || 'memo-channel-secret';
+      // Generate session token (valid 24h) — fail closed if secret is not configured
+      const secret = getJwtSecret(env);
+      if (!secret) {
+        console.error('[handleLiffApi auth error] LINE_CHANNEL_SECRET is not configured');
+        return jsonResponse({ error: 'Server authentication is not configured' }, 500);
+      }
       const sessionToken = await signJwt(
         { userId, lineUserId, exp: Date.now() + 24 * 3600 * 1000 },
         secret
